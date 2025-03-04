@@ -1,10 +1,10 @@
 
 
 up: 
-	@docker-compose up
+	docker-compose up
 
 down: 
-	@docker-compose down
+	docker-compose down
 
 publisher:
 	cd cmd/publisher && go run .
