@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"time"
 
@@ -14,15 +15,32 @@ func (exampleConsumerGroupHandler) Setup(_ sarama.ConsumerGroupSession) error   
 func (exampleConsumerGroupHandler) Cleanup(_ sarama.ConsumerGroupSession) error { return nil }
 func (h exampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
-		log.Printf("Received message: %s\n", string(msg.Value))
-		// Process the message as per your requirement here
+		// メッセージ詳細をJSONで出力
+		messageData := map[string]interface{}{
+			"topic":     msg.Topic,
+			"partition": msg.Partition,
+			"offset":    msg.Offset,
+			"key":       string(msg.Key),
+			"value":     string(msg.Value),
+			"timestamp": msg.Timestamp,
+		}
+
+		jsonData, err := json.MarshalIndent(messageData, "", "  ")
+		if err != nil {
+			log.Printf("Error marshaling message data: %v", err)
+			continue
+		}
+
+		log.Printf("Received message:\n%s\n", jsonData)
+
+		// メッセージをマーク
 		sess.MarkMessage(msg, "")
 	}
 	return nil
 }
 
 func main() {
-	brokers := []string{"kafka:9092"}
+	brokers := []string{"localhost:9093"}
 	groupID := "consumer-group"
 
 	config := sarama.NewConfig()
