@@ -1,17 +1,5 @@
 version: "3.7"
 services:
-  kafka-docker-sample:
-    build:
-      context: ./
-      dockerfile: build/Dockerfile
-    volumes:
-      - ./cmd/consumer:/code/cmd/consumer
-    depends_on:
-      - kafka
-    tty: true
-    environment:
-      - TZ=Asia/Tokyo
-      
   zookeeper:
     restart: always
     container_name: kafka-like-zookeeper
