@@ -15,7 +15,6 @@ func (exampleConsumerGroupHandler) Setup(_ sarama.ConsumerGroupSession) error   
 func (exampleConsumerGroupHandler) Cleanup(_ sarama.ConsumerGroupSession) error { return nil }
 func (h exampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
-		// メッセージ詳細をJSONで出力
 		messageData := map[string]interface{}{
 			"topic":     msg.Topic,
 			"partition": msg.Partition,
@@ -32,8 +31,6 @@ func (h exampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSessi
 		}
 
 		log.Printf("Received message:\n%s\n", jsonData)
-
-		// メッセージをマーク
 		sess.MarkMessage(msg, "")
 	}
 	return nil
