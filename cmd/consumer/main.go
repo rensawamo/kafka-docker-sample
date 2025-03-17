@@ -37,7 +37,7 @@ func (h exampleConsumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSessi
 }
 
 func main() {
-	brokers := []string{"localhost:9093"}
+	brokers := []string{"localhost:9093", "localhost:9094", "localhost:9095"}
 	groupID := "consumer-group"
 
 	config := sarama.NewConfig()

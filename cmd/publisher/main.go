@@ -17,7 +17,7 @@ type Message struct {
 }
 
 func main() {
-	brokers := []string{"localhost:9093"}
+	brokers := []string{"localhost:9093", "localhost:9094", "localhost:9095"}
 	producer, err := sarama.NewSyncProducer(brokers, nil)
 	if err != nil {
 		log.Fatalln("Failed to start Sarama producer:", err)
@@ -25,8 +25,8 @@ func main() {
 	}
 	defer producer.Close()
 
-	userId := [5]int{100001, 100002, 100003, 100004, 100005}
 	postId := [5]string{"POST00001", "POST00002", "POST00003", "POST00004", "POST00005"}
+	userId := [5]int{100001, 100002, 100003, 100004, 100005}
 	userAction := [5]string{"love", "like", "hate", "smile", "cry"}
 
 	for {
@@ -44,6 +44,7 @@ func main() {
 
 		msg := &sarama.ProducerMessage{
 			Topic: "post-likes",
+			Key:   sarama.StringEncoder(message.PostId),
 			Value: sarama.StringEncoder(jsonMessage),
 		}
 
